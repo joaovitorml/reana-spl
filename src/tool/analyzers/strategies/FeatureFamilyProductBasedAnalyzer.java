@@ -62,14 +62,18 @@ public class FeatureFamilyProductBasedAnalyzer {
 
         timeCollector.startTimer(CollectibleTimers.EXPRESSION_SOLVING_TIME);
 
-        // TO-DO: ITE
+        // The expressions so far have variables that correspond to RDG node IDs.
         String familyWideExpression = encodeVariability(expressions);
+        // After encoding, the variables in the expression are different; now they
+        // correspond to equivalence classes for the presence conditions of the RDG nodes
+        // identified by the previous variables.
         formulaCollector.collectFormula(node, familyWideExpression);
 
         if (concurrencyStrategy == ConcurrencyStrategy.PARALLEL) {
             LOGGER.info("Solving the family-wide expression for each product in parallel.");
         }
 
+        // This step is shared with the family-product-based strategy.
         Map<Collection<String>, Double> results = productBasedEvaluator.evaluate(familyWideExpression,
                                                                                  dependencies,
                                                                                  configurations,
@@ -80,6 +84,15 @@ public class FeatureFamilyProductBasedAnalyzer {
         return new MapBasedReliabilityResults(results);
     }
 
+    /**
+     * Encode many expressions in a single 150% one, whose variables represent equivalence classes
+     * for the presence conditions in the RDG.
+     *
+     * @param sortedExpressions Topologically sorted (according to the RDG dependencies) reliability expressions.
+     *      The variables in these expressions correspond to RDG node IDs.
+     * @return A variability-encoded expression whose variables represent equivalence classes
+     *      for the presence conditions in the RDG.
+     */
     private String encodeVariability(List<Component<String>> sortedExpressions) {
         return ExpressionsVariabilityEncoding.encodeVariability(sortedExpressions);
     }

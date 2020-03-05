@@ -23,6 +23,18 @@ public class ProductBasedAnnotativeExpressionEvaluator {
         this.expressionSolver = new ExpressionSolver(jadd);
     }
 
+    /**
+     * Evaluates an expression whose variables are equivalence classes for presence conditions.
+     *
+     * @see PresenceCondition.toEquivalenceClasses()
+     * @param expression String with an algebraic expression whose variables are
+     *      equivalence classes for presence conditions.
+     * @param dependencies Topologically sorted list of RDG nodes whose reliability expressions
+     *      are encoded in `expression`.
+     * @param configurations Configurations for which the expression will be evaluated.
+     * @param concurrencyStrategy
+     * @return Results for each configuration.
+     */
     public Map<Collection<String>, Double> evaluate(String expression,
                                                     List<RDGNode> dependencies,
                                                     Stream<Collection<String>> configurations,
