@@ -150,10 +150,15 @@ public class CommandLineInterface {
                                           validConfigs);
             break;
         case FEATURE_FAMILY:
-        default:
             results = evaluateFeatureFamilyBasedReliability(analyzer,
                                                             rdgRoot,
                                                             options);
+            break;
+        case FEATURE_FAMILY_PRODUCT:
+        	default:
+        		results = evaluateReliability(analyzer::evaluateFeatureFamilyProductBasedReliability,
+                                          rdgRoot,
+                                          validConfigs);
         }
         return results;
     }
